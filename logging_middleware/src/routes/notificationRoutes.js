@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-// --- In-Memory Data (No Database Needed) ---
+
 const FAKE_USER_ID = 'user123';
 
 let alerts = [
@@ -10,7 +10,7 @@ let alerts = [
     { id: 3, userId: 'user456', message: 'This is for another user.', read: false },
     { id: 4, userId: 'user123', message: 'Sample Alert: Your subscription is expiring soon.', read: false },
 ];
-// ---------------------------------------------
+//here i m using fake alerts for testing
 
 router.get('/', (req, res) => {
     const userAlerts = alerts.filter(a => a.userId === FAKE_USER_ID);

@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import logRequests from './middleware/requestlogger.js';
 import usersApi from './routes/userRoutes.js';
 import alertsApi from './routes/notificationRoutes.js';
-import notificationRoutes from './routes/notificationRoutes.js';
+import PriorityService from './priorityService.js';
 import pool from './db/db.js';
 const app = express();
 const httpServer = createServer(app);
@@ -27,7 +27,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', usersApi);
 app.use('/alerts', alertsApi);
-app.use('/notifications', notificationRoutes);
+
+app.get('/priority-inbox', async (req, res) => {
+    try {
+        const topN = req.query.n ? parseInt(req.query.n) : 10;
+        const notifications = await PriorityService.getTopNotifications(topN);
+        res.json(notifications);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'API is up and running' });
